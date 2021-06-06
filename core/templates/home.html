@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+
+{% block title %}Track your vaccine{% endblock %}
+
+{% block content %}
+<div class="container">
+    <!--<div class="py-4 text-center">
+        <form method="POST">
+            {% csrf_token %}
+            <button class="btn btn-primary">Save districts</button>
+        </form>
+    </div>-->
+    {% if state %}
+    <div class="row justify-content-center py-5">
+        <div class="col-md-6 card shadow-lg p-4">
+            <form method="POST">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="gmail" class="pt-3 pb-2">Email address</label>
+                    <input type="email" class="form-control" id="gmail" placeholder="example@example.com" name="gmail">
+                </div>
+                <div class="form-group">
+                    <label for="age" class="pt-3 pb-2">Age</label>
+                    <input type="text" class="form-control" id="age" placeholder="18" name="age">
+                </div>
+                <div class="form-group">
+                    <label for="state" class="pt-3 pb-2">State</label>
+                    <select class="form-control" id="state" autocomplete="off" name="state">
+                        <option value="empty">-- select one -- </option>
+                        {% for i in state %}
+                        <option value="{{i.api_id}}">{{i.name}}</option>
+                        {% endfor %}
+                    </select>
+
+                    <label for="district" class="pt-3 pb-2">District</label>
+                    <select class="form-control" id="district" autocomplete="off" name="district">
+                        <option value="empty" id="d_empty">-- select one --</option>
+                    </select>
+                </div>
+                <div class="text-center pb-2 pt-4">
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    {% endif %}
+
+</div>
+{% endblock %}
+{% block script %}
+<script>
+    $(document).ready(function () {
+        $("#state").change(function () {
+            var val = $(this).val();
+            if (val == "empty") {
+                $("#district").html(`<option value="empty" id="d_empty">-- select one --</option>`);
+            } else {
+                $.ajax({
+                    type: 'GET',
+                    url: "{% url 'getdistrict' %}",
+                    data: { "val": val },
+                    dataType: 'json',
+                    success: function (response) {
+                        $('#district').find('option').remove();
+                        //$("#d_empty").remove();
+                        $.each(response['district'], function (index, element) {
+                            $("#district").append(`<option value=${element.api_id}>${element.name}</option>`);
+                        });
+                    },
+                    error: function (response) {
+                        console.log(response)
+                    }
+                })
+            }
+
+        });
+    });
+</script>
+{% endblock %}

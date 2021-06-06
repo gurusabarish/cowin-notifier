@@ -1,1 +1,22 @@
-# cowin-notifier
+# Cowin notifier
+Vaccine notifier using cowin public api and python.
+
+# local setup
+
+```sh
+git clone https://github.com/gurusabarish/cowin-notifier.git
+cd cowin-notifier
+pip install -r requirements.txt
+```
+
+# Run on your machine
+**Fill your email detail in .env file**
+
+```sh
+python manage.py createsuperuser
+python manage.py runserver localhost:8080
+```
+
+- Go to localhost:8080/states-and-districts
+- Now, Go to [localhost:8080](http://localhost:8080) and register
+- After that, run the main script by entering http://localhost:8080/runscript on browser.
